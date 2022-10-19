@@ -11,7 +11,7 @@ namespace OelianderCLI
     public class Settings
     {
         public string Shodan_Pattern { get; set; } = @"\x92\x02index\x00\x00\x00\x00\x00\x00\x01";
-        public string Shodan_API_Key { get; set; } = "DY4e5sKxXqzQALjmIvom5t7YCnz19lnC"; // = "0nac3uXRcY0UgCPw0QyRpUJyZoaJsqPi"
+        public string Shodan_API_Key { get; set; } = ""; // = ""
         public string Connection_Timeout { get; set; } = "3000";
 
         public static void SaveSettings() => File.WriteAllText("settings.json", JsonConvert.SerializeObject(Program.settings));
