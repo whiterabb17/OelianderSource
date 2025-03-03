@@ -42,7 +42,7 @@ namespace Oeliander
             try
             {
                 ssh.Client = new SshClient(ssh.IP, 22, ssh.Username, ssh.Password);
-                ssh.Client.ConnectionInfo.Timeout = TimeSpan.FromMilliseconds(Convert.ToInt32(MainWindow.settings.Connection_Timeout));
+                ssh.Client.ConnectionInfo.Timeout = TimeSpan.FromMilliseconds(Convert.ToInt32(_Settings.settings.Connection_Timeout));
                 ssh.Client.Connect();
                 ssh.Shell = ssh.Client.CreateShellStream("vt-100", 80, 60, 800, 600, 65536);
 
@@ -52,7 +52,7 @@ namespace Oeliander
             }
             catch (Exception ex) 
             {
-                main.AddLog($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+                main.addLog($"{ssh.Username}@{ssh.IP}: {ex.Message}");
                 Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}"); return false; 
             }
         }
@@ -64,7 +64,7 @@ namespace Oeliander
             {
                 if (TryConnect(ssh))
                 {
-                    main.AddLog($"{ssh.Username}@{ssh.IP}: Connected Successfully");
+                    main.addLog($"{ssh.Username}@{ssh.IP}: Connected Successfully");
                     ssh.Shell.Write(cmd + "\n");
                     ssh.Shell.Flush();
                 }
@@ -82,7 +82,7 @@ namespace Oeliander
                     {
                         string content = ssh.Shell.Read();
                         Console.WriteLine($"{ssh.Username}@{ssh.IP}:", content);
-                        main.AddLog($"{ssh.Username}@{ssh.IP}: {content}\n");
+                        main.addLog($"{ssh.Username}@{ssh.IP}: {content}\n");
                     }
                 }
                 catch { }
@@ -107,7 +107,7 @@ namespace Oeliander
             try
             {
                 ssh.Client = new SshClient(ssh.IP, 22, ssh.Username, ssh.Password);
-                ssh.Client.ConnectionInfo.Timeout = TimeSpan.FromMilliseconds(Convert.ToInt32(MainWindow.settings.Connection_Timeout));
+                ssh.Client.ConnectionInfo.Timeout = TimeSpan.FromMilliseconds(Convert.ToInt32(_Settings.settings.Connection_Timeout));
                 ssh.Client.Connect();
                 ssh.Shell = ssh.Client.CreateShellStream("vt-100", 80, 60, 800, 600, 65536);
 
@@ -117,7 +117,7 @@ namespace Oeliander
             }
             catch (Exception ex)
             {
-                window.SessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+                window.sessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
                 Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}"); return false;
             }
         }
@@ -133,12 +133,12 @@ namespace Oeliander
                 }
                 else 
                 {
-                    term.SessionResult($"{ssh.Username}@{ssh.IP}: Disconnected Unexpectadly");
+                    term.sessionResult($"{ssh.Username}@{ssh.IP}: Disconnected Unexpectadly");
                 }
             }
             catch (Exception ex) 
             { 
-                term.SessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+                term.sessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
                 Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}"); 
             }
         }
@@ -153,7 +153,7 @@ namespace Oeliander
                     {
                         string content = ssh.Shell.Read();
                         Console.WriteLine($"{ssh.Username}@{ssh.IP}:", content);
-                        window.AddResult($"{ssh.Username}@{ssh.IP}> {content}");
+                        window.addResult($"{ssh.Username}@{ssh.IP}> {content}");
                     }
                 }
                 catch { }

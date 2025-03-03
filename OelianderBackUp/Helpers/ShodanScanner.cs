@@ -14,10 +14,10 @@ namespace Oeliander
         public static bool _continue = false;
         public static void GetShodanSearch()
         {
-            string version = NewHelper._osVersion;
+            string version = newHelper._osVersion;
             using (WebClient wc = new WebClient())
             {
-                string json = wc.DownloadString($"https://api.shodan.io/shodan/host/search?key={MainWindow.settings.Shodan_API_Key}&query=\"{MainWindow.settings.Shodan_Pattern}\"+\"{version}\"");
+                string json = wc.DownloadString($"https://api.shodan.io/shodan/host/search?key={_Settings.settings.Shodan_API_Key}&query=\"{_Settings.settings.Shodan_Pattern}\"+\"{version}\"");
                 sr = JsonConvert.DeserializeObject<ShodanResponse>(json);
                 _continue = true;
             }

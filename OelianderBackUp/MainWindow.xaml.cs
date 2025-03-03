@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
@@ -14,20 +17,24 @@ namespace Oeliander
     {
         #region locals
 
-        public NewHelper helperObject { get; set; }
+        public newHelper helperObject { get; set; }
         public List<string> collectedCredentials = new List<string>();
         public List<string> rosVersion = new List<string>();
         public static Dictionary<User, string> _staticList = new Dictionary<User, string>();
 
         #endregion locals
 
-        public void AddLog(string text, object obj)
+        public void addLog(string text, object obj)
         {
             try
             {
                 Dispatcher.Invoke(() =>
                 {
-                    logRichTextBox.AppendText(text + Environment.NewLine);
+                    logRichTextBox.AppendText(text+ Environment.NewLine);
+                   // collectedCredentials.Add(text); // + Environment.NewLine);
+                    //logRichTextBox.DataContext = collectedCredentials;
+                  //  resList.ItemsSource = collectedCredentials;
+                  //  resList.Items.Refresh();
                 });
             }
             catch (Exception E)
@@ -35,14 +42,14 @@ namespace Oeliander
                 helperObject.HandleException(E);
             }
         }
-        public void AddToLogFile(string text)
+        public void addToLogFile(string text)
         {
             if (!File.Exists("Oeliander.log")) { File.Create("Oeliander.log"); }
             Thread.Sleep(1000);
             try { Dispatcher.Invoke(() => System.IO.File.AppendAllText("Oeliander.log", text + Environment.NewLine)); }
             catch (Exception ex) { logRichTextBox.AppendText(ex.Message); }
         }
-        public void AddTargetNum(int _num)
+        public void addTargetNum(int _num)
         {
             try { Dispatcher.Invoke(() => { targetNum.Text = Convert.ToString(_num); }); }
             catch (Exception E) { helperObject.HandleException(E); }
@@ -55,8 +62,8 @@ namespace Oeliander
             Dispatcher.Invoke(() =>
             {
                 StartButton.Content = "Start"; 
-                AddLog(Environment.NewLine + helperObject.GetTime() + ": Scan stopped successfully\n");
-                AddToLogFile("\n\n\t[*] End of Scan: " + helperObject.GetTime() + "\n\n###############################################################################\n\n");
+                addLog(Environment.NewLine + helperObject.GetTime() + ": Scan stopped successfully\n");
+                addToLogFile("\n\n\t[*] End of Scan: " + helperObject.GetTime() + "\n\n###############################################################################\n\n");
             });
         }
         public void FillList()
@@ -66,9 +73,13 @@ namespace Oeliander
                 userGrid.ItemsSource = null;
                 userGrid.ItemsSource = _collectionList;
                 userGrid.Items.Refresh();
+                //collectedCredentials.Add(text + Environment.NewLine);
+                // logRichTextBox.DataContext = collectedCredentials;
+                // resList.ItemsSource = collectedCredentials;
+                // resList.Items.Refresh();
             });
         }
-        public void AddCred(User _uList, string _ip, bool status = false)
+        public void addCred(User _uList, string _ip, bool status = false)
         {
             try
             {
@@ -91,7 +102,7 @@ namespace Oeliander
                 helperObject.HandleException(E);
             }
         }
-        public void AddCred(List<User> _uList, string _ip, string status = "Unauthenticated")
+        public void addCred(List<User> _uList, string _ip, string status = "Unauthenticated")
         {
             try
             {
@@ -116,6 +127,10 @@ namespace Oeliander
                     userGrid.ItemsSource = null;
                     userGrid.ItemsSource = _collectionList;
                     userGrid.Items.Refresh();
+                    //collectedCredentials.Add(text + Environment.NewLine);
+                    // logRichTextBox.DataContext = collectedCredentials;
+                    // resList.ItemsSource = collectedCredentials;
+                    // resList.Items.Refresh();
                 });
             }
             catch (Exception E)
@@ -123,7 +138,7 @@ namespace Oeliander
                 helperObject.HandleException(E);
             }
         }
-        public void AddLog(string text)
+        public void addLog(string text)
         {
             try
             {
@@ -137,32 +152,25 @@ namespace Oeliander
                 helperObject.HandleException(E);
             }
         }
-
-        internal static Settings settings = new Settings();
         public MainWindow()
         {
             InitializeComponent();
-            settings.LoadSettings();
+            Settings.LoadSettings();
             rosVersion = new List<string>()
             {
                 "6.30",
                 "6.31",
                 "6.32"
             };
-            Dispatcher.Invoke(() =>
-            {
-                timeOutTextBox.Text = _Settings._Timeout;
-                apiKey.Text = _Settings._Key;
-            });
-            LoadOsVersions();
-            helperObject = new NewHelper(AddLog, false, this)
+            loadOsVersions();
+            helperObject = new newHelper(addLog, false, this)
             {
                 debugMod = false
             };
             manualScan.IsChecked = true;
             shodanScan.IsChecked = false;
         }
-        private void LoadOsVersions()
+        private void loadOsVersions()
         {
             try
             {
@@ -208,6 +216,11 @@ namespace Oeliander
             {
                 helperObject.Stop();
             }
+        }
+
+        private void Label_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            Environment.Exit(0);
         }
 
         private void Label_MouseDoubleClick_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -288,20 +301,14 @@ namespace Oeliander
         {
             if (!useShodanScan)
                 useShodanScan = true;
-            routerVersion.Visibility = Visibility.Visible;
-            TargetOSLabel.Visibility = Visibility.Visible;
-            apiKey.IsEnabled = true;
-            ipList.IsEnabled = false;
+            Console.WriteLine("Using Shodan to Scan for Targets");
         }
 
         private void manualScan_Click(object sender, RoutedEventArgs e)
         {
             if (useShodanScan)
                 useShodanScan = false;
-            routerVersion.Visibility = Visibility.Hidden;
-            TargetOSLabel.Visibility = Visibility.Hidden;
-            apiKey.IsEnabled = false;
-            ipList.IsEnabled = true;
+            Console.WriteLine("Not using ShodanAPI");
         }
 
         private void selectList_Click(object sender, RoutedEventArgs e)
@@ -329,20 +336,16 @@ namespace Oeliander
         }
         private void ClearLogs(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText("Oeliander.log", "Oeliander Exploit Logs\n--------------------------------\n\n");
+            File.WriteAllText("Oeliander.log", "");
         }
         private void timeOutTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             _Settings._Timeout = timeOutTextBox.Text;
-            settings.Connection_Timeout = timeOutTextBox.Text;
-            settings.SaveSettings();
         }
 
         private void apiKey_TextChanged(object sender, TextChangedEventArgs e)
         {
             _Settings._Key = apiKey.Text;
-            settings.Shodan_API_Key = apiKey.Text;
-            settings.SaveSettings();
         }
 
         private void logRichTextBox_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

@@ -11,27 +11,48 @@ namespace Oeliander
 {
     internal class _Settings
     {
-        internal static Settings settings = new Settings();
-        internal static string _Pattern = settings.Shodan_Pattern;
-        internal static string _Key = settings.Shodan_API_Key;
-        internal static string _Timeout = settings.Connection_Timeout;
+        internal static string _Pattern { get; set; } =  MainWindow.settings.Shodan_Pattern;
+        internal static string _Key { get; set; } = MainWindow.settings.Shodan_API_Key;
+        internal static string _Timeout { get; set; } = MainWindow.settings.Connection_Timeout;
     }
     public class Settings
     {
         public string Shodan_Pattern { get; set; } = @"\x92\x02index\x00\x00\x00\x00\x00\x00\x01";
         public string Shodan_API_Key { get; set; } = ""; // = ""
         public string Connection_Timeout { get; set; } = "3000";
-
-        public void SaveSettings() => File.WriteAllText("settings.json", JsonConvert.SerializeObject(_Settings.settings));
-        public static void SaveConfig() => File.WriteAllText("settings.json", JsonConvert.SerializeObject(_Settings.settings));
-        public static void LoadSettings()
+        public void SaveSettings()
+        {
+            try
+            {
+                File.Delete("settings.json");
+                File.WriteAllText("settings.json", JsonConvert.SerializeObject(MainWindow.settings));
+                Console.WriteLine("Settings Saved");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public static void SaveConfig() => File.WriteAllText("settings.json", JsonConvert.SerializeObject(MainWindow.settings));
+        public void LoadSettings()
         {
             try
             {
                 if (!File.Exists("settings.json"))
+                {
+                    _Settings._Pattern = MainWindow.settings.Shodan_Pattern;
+                    _Settings._Timeout = MainWindow.settings.Connection_Timeout;
+                    _Settings._Key = MainWindow.settings.Shodan_API_Key;
                     SaveConfig();
+                }
                 else
-                    _Settings.settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("settings.json"));
+                { 
+                    var _settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("settings.json"));
+                    _Settings._Pattern = _settings.Shodan_Pattern;
+                    _Settings._Timeout = _settings.Connection_Timeout;
+                    _Settings._Key = _settings.Shodan_API_Key;
+                }
+                    //_Settings.settings = JsonConvert.DeserializeObject<Settings>(File.ReadAllText("settings.json"));
             }
             catch { }
         }
