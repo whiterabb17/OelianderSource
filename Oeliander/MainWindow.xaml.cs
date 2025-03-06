@@ -18,6 +18,7 @@ namespace Oeliander
         public List<string> collectedCredentials = new List<string>();
         public List<string> rosVersion = new List<string>();
         public static Dictionary<User, string> _staticList = new Dictionary<User, string>();
+        public bool SaveShodanOnly = false;
 
         #endregion locals
 
@@ -292,6 +293,8 @@ namespace Oeliander
             TargetOSLabel.Visibility = Visibility.Visible;
             apiKey.IsEnabled = true;
             ipList.IsEnabled = false;
+            ShodanSaveOnlyChk.IsEnabled = true;
+            ShodanSaveOnlyChk.Visibility = Visibility.Visible;
         }
 
         private void manualScan_Click(object sender, RoutedEventArgs e)
@@ -302,6 +305,8 @@ namespace Oeliander
             TargetOSLabel.Visibility = Visibility.Hidden;
             apiKey.IsEnabled = false;
             ipList.IsEnabled = true;
+            ShodanSaveOnlyChk.IsEnabled = false;
+            ShodanSaveOnlyChk.Visibility = Visibility.Hidden;
         }
 
         private void selectList_Click(object sender, RoutedEventArgs e)
@@ -349,6 +354,14 @@ namespace Oeliander
         {
             if (!Directory.Exists("Results\\Winbox"))
                 ResultButton.IsEnabled = false;
+        }
+
+        private void ShodanSaveOnlyChk_Checked(object sender, RoutedEventArgs e)
+        {
+            if (ShodanSaveOnlyChk.IsChecked == true)
+                SaveShodanOnly = true;
+            else
+                SaveShodanOnly = false;
         }
     }
 }

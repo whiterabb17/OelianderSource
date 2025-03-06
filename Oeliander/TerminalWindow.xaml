@@ -188,7 +188,7 @@
         <TextBox
             x:Name="commandText"
             Width="508"
-            Height="24"
+            Height="26"
             Margin="14,400,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
@@ -210,7 +210,7 @@
             Grid.Column="1"
             Width="36"
             Height="36"
-            Margin="174,7,0,0"
+            Margin="178,5,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Center"

@@ -1,0 +1,10 @@
+D:\Repos\OelianderUI\App2.Core\bin\Debug\netstandard2.0\App2.Core.deps.json
+D:\Repos\OelianderUI\App2.Core\bin\Debug\netstandard2.0\App2.Core.dll
+D:\Repos\OelianderUI\App2.Core\bin\Debug\netstandard2.0\App2.Core.pdb
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.csproj.AssemblyReference.cache
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.AssemblyInfoInputs.cache
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.AssemblyInfo.cs
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.csproj.CoreCompileInputs.cache
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.dll
+D:\Repos\OelianderUI\App2.Core\obj\Debug\netstandard2.0\App2.Core.pdb

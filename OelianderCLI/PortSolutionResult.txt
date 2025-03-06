@@ -1,0 +1,77 @@
+==========
+References
+==========
+System
+OelianderCLI
+System.Collections
+System.Collections.Generic
+System.Linq
+System.Net
+System.Net.Sockets
+System.Text
+System.Security.Cryptography
+System.Reflection
+System.Threading
+System.Threading.Tasks
+System.IO
+Newtonsoft.Json
+Renci.SshNet
+global::System
+global::System.Collections.Generic
+global::System.IO
+global::System.Linq
+global::System.Net.Http
+global::System.Threading
+global::System.Threading.Tasks
+project.all
+
+===============
+DownloadedFiles
+===============
+project.all.json
+
+==============
+ProjectResults
+==============
+----------------------
+Showing results for: D:\Repos\OelianderSource\OelianderCLI\OelianderCLI.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+----------------------
+Showing results for: D:\Repos\OelianderSource\OelianderCLI\OelianderCLI.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+
+===========
+BuildErrors
+===========
+
+

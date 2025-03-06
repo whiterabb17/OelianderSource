@@ -447,16 +447,19 @@ namespace Oeliander
                         foreach (Match m in _results.matches)
                         {
                             SaveShodan($"FOUND IPADDRESS: {m.ip}");
-                            mainFormObject.Dispatcher.Invoke(() =>
+                            if (!mainFormObject.SaveShodanOnly)
                             {
-                                mainFormObject.AddLog($"[?] Attempting to Exploit: {m.ip_str}");
-                                mainFormObject.AddToLogFile($"[?] Attempting to Exploit: {m.ip_str}\n");
-                            });
-                            Console.WriteLine($"Attempting: {m.ip_str}");
-                            _using = m.ip_str;
-                            _use = m.ip_str;
-                            Thread tr = new Thread(() => TryExploit(m.ip_str));
-                            tr.Start();
+                                mainFormObject.Dispatcher.Invoke(() =>
+                                {
+                                    mainFormObject.AddLog($"[?] Attempting to Exploit: {m.ip_str}");
+                                    mainFormObject.AddToLogFile($"[?] Attempting to Exploit: {m.ip_str}\n");
+                                });
+                                //Console.WriteLine($"Attempting: {m.ip_str}");
+                                _using = m.ip_str;
+                                _use = m.ip_str;
+                                Thread tr = new Thread(() => TryExploit(m.ip_str));
+                                tr.Start();
+                            }                            
                         }
                     }
                 }

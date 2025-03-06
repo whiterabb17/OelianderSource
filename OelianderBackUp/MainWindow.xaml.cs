@@ -21,6 +21,7 @@ namespace Oeliander
         public List<string> collectedCredentials = new List<string>();
         public List<string> rosVersion = new List<string>();
         public static Dictionary<User, string> _staticList = new Dictionary<User, string>();
+        public static bool SaveShodanResults = false;
 
         #endregion locals
 
@@ -352,6 +353,11 @@ namespace Oeliander
         {
             if (!Directory.Exists("Results\\Winbox"))
                 ResultButton.IsEnabled = false;
+        }
+
+        private void manualScan_Copy_Checked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

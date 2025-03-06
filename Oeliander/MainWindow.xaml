@@ -98,18 +98,6 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Button
-            Grid.Column="1"
-            Width="29"
-            Height="19"
-            Margin="252,16,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Background="Black"
-            BorderBrush="Black"
-            Click="Button_Click_2"
-            Content="x"
-            Foreground="White" />
         <RichTextBox
             x:Name="logRichTextBox"
             Width="448"
@@ -342,6 +330,12 @@
                 </Style>
             </TextBox.Resources>
         </TextBox>
+        <CheckBox
+            x:Name="ShodanSaveOnlyChk"
+            Visibility="Hidden"
+            Content="Save Only" 
+            Margin="421,181,78,240" 
+            Foreground="White" Checked="ShodanSaveOnlyChk_Checked"/>
         <Label
             Height="30"
             Margin="30,134,364,0"
@@ -352,7 +346,7 @@
             Grid.Column="1"
             Width="36"
             Height="36"
-            Margin="168,5,0,0"
+            Margin="170,5,0,0"
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             HorizontalContentAlignment="Center"
