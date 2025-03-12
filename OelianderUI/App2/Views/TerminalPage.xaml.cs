@@ -89,7 +89,7 @@ public partial class TerminalPage : Page, INotifyPropertyChanged
     public void StartSSHConnection(string ip, User user)
     {
         ssh = new SSH(ip, user.Username, user.Password);
-        if (ssh.TryConnect(this))
+        if (ssh.TryConnect(1))
         {
             ssh.SendCMD("whoami", this);
         }
@@ -147,7 +147,7 @@ public partial class TerminalPage : Page, INotifyPropertyChanged
     {
         if (e.Key == System.Windows.Input.Key.Enter)
         {
-            if (ssh.TryConnect())
+            if (ssh.TryConnect(1))
             {
                 ssh.SendCMD(CommandText.Trim().Replace("> ", ""), this);  //commandText.Text.Trim().Replace("> ", ""), this);
                 Dispatcher.Invoke(() =>

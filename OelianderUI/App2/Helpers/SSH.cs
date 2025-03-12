@@ -50,73 +50,7 @@ public class SSH
 public static class ServerExtensions
 {
     #region MainWindow Connection Logic
-    public static bool TryConnect(this SSH ssh)
-    {
-        try
-        {
-            if (ssh.Client == null || ssh.Shell == null || !ssh.Client.IsConnected)
-                return ssh.Connect();
-            else
-                return false;
-        }
-        catch { return false; }
-    }
-    private static MainPage main;
-    public static bool Connect(this SSH ssh)
-    {
-        try
-        {
-            ssh.Client = new SshClient(ssh.IP, 22, ssh.Username, ssh.Password);
-            ssh.Client.ConnectionInfo.Timeout = TimeSpan.FromMilliseconds(Convert.ToInt32("3000"));
-            ssh.Client.Connect();
-            ssh.Shell = ssh.Client.CreateShellStream("vt-100", 80, 60, 800, 600, 65536);
-
-            Thread thread = new Thread(() => ssh.Receiver());
-            thread.Start();
-            return ssh.Client.IsConnected;
-        }
-        catch (Exception ex)
-        {
-            main.AddLog($"{ssh.Username}@{ssh.IP}: {ex.Message}");
-            Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}"); return false;
-        }
-    }
-
-    public static void SendCMD(this SSH ssh, string cmd, MainPage mainWindow)
-    {
-        main = mainWindow;
-        try
-        {
-            if (TryConnect(ssh))
-            {
-                main.AddLog($"{ssh.Username}@{ssh.IP}: Connected Successfully");
-                ssh.Shell.Write(cmd + "\n");
-                ssh.Shell.Flush();
-            }
-        }
-        catch (Exception ex) { Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}"); }
-    }
-
-    public static void Receiver(this SSH ssh)
-    {
-        while (true)
-        {
-            try
-            {
-                if (ssh.Shell != null && ssh.Shell.DataAvailable)
-                {
-                    string content = ssh.Shell.Read();
-                    Console.WriteLine($"{ssh.Username}@{ssh.IP}:", content);
-                    main.AddLog($"{ssh.Username}@{ssh.IP}: {content}\n");
-                }
-            }
-            catch { }
-            Thread.Sleep(200);
-        }
-    }
-    #endregion MainWindow Connection Logic
-    #region TerminalWindow Connection Logic
-    public static bool TryConnect(this SSH ssh, TerminalPage window)
+    public static bool TryConnect(this SSH ssh, int window)
     {
         try
         {
@@ -127,7 +61,9 @@ public static class ServerExtensions
         }
         catch { return false; }
     }
-    public static bool Connect(this SSH ssh, TerminalPage window)
+    private static MainPage main;
+    private static TerminalPage term;
+    public static bool Connect(this SSH ssh, int window)
     {
         try
         {
@@ -142,16 +78,78 @@ public static class ServerExtensions
         }
         catch (Exception ex)
         {
-            window.SessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
-            Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}"); return false;
+            switch (window)
+            {
+                case 0:
+                    main.AddLog($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+                    break;
+                case 1:
+                    term.SessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+                    break;
+            }
+            return false;
         }
     }
-    public static void SendCMD(this SSH ssh, string cmd, TerminalPage termWindow)
+
+    public static void SendCMD(this SSH ssh, string cmd, MainPage mainWindow)
     {
-        TerminalPage term = termWindow;
+        main = mainWindow;
         try
         {
-            if (TryConnect(ssh))
+            if (TryConnect(ssh, 0))
+            {
+                //main.AddLog($"{ssh.Username}@{ssh.IP}: Connected Successfully");
+                ssh.Shell.Write(cmd + "\n");
+                ssh.Shell.Flush();
+            }
+        }
+        catch (Exception ex) 
+        { 
+            Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+            main.AddLog($"{ssh.Username}@{ssh.IP}: {ex.Message}");
+        }
+    }
+
+    public static void Receiver(this SSH ssh, int window)
+    {
+        while (true)
+        {
+            try
+            {
+                if (ssh.Shell != null && ssh.Shell.DataAvailable)
+                {
+                    var content = ssh.Shell.Read();
+                    switch (window)
+                    {
+                        case 0:
+                            main.AddLog($"{ssh.Username}@{ssh.IP}: {content}\n");
+                            if (ScanHelper.carryon == 1)
+                            {
+                                if (content.Contains("error"))
+                                    ScanHelper.carryon = 2;
+                                else
+                                    ScanHelper.carryon = 0;
+                            }
+                            break;
+                        case 1:
+                            term.AddResult($"{ssh.Username}@{ssh.IP}: {content}");
+                            break;
+                    }                    
+                }
+            }
+            catch { }
+            Thread.Sleep(200);
+            
+        }
+    }
+    #endregion MainWindow Connection Logic
+    #region TerminalWindow Connection Logic
+    public static void SendCMD(this SSH ssh, string cmd, TerminalPage termWindow)
+    {
+        term = termWindow;
+        try
+        {
+            if (TryConnect(ssh, 1))
             {
                 ssh.Shell.Write(cmd + "\n");
                 ssh.Shell.Flush();
@@ -165,24 +163,6 @@ public static class ServerExtensions
         {
             term.SessionResult($"{ssh.Username}@{ssh.IP}: {ex.Message}");
             Console.WriteLine($"{ssh.Username}@{ssh.IP}: {ex.Message}");
-        }
-    }
-
-    public static void Receiver(this SSH ssh, TerminalPage window)
-    {
-        while (true)
-        {
-            try
-            {
-                if (ssh.Shell != null && ssh.Shell.DataAvailable)
-                {
-                    string content = ssh.Shell.Read();
-                    Console.WriteLine($"{ssh.Username}@{ssh.IP}:", content);
-                    window.AddResult($"{ssh.Username}@{ssh.IP}> {content}");
-                }
-            }
-            catch { }
-            Thread.Sleep(200);
         }
     }
     #endregion TerminalWindow Connection Logic

