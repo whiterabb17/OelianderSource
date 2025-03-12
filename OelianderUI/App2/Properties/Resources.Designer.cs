@@ -79,11 +79,20 @@ namespace OelianderUI.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Settings page placeholder text.  Your app description goes here..
+        ///   Looks up a localized string similar to This application is aimed at discovering, analyzing &amp; displaying the impact of vulnerabilities within MikroTik RouterOS..
         /// </summary>
         public static string SettingsPageAboutText {
             get {
                 return ResourceManager.GetString("SettingsPageAboutText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mainly the WinBox credential disclosure vulnerability..
+        /// </summary>
+        public static string SettingsPageAboutText2 {
+            get {
+                return ResourceManager.GetString("SettingsPageAboutText2", resourceCulture);
             }
         }
         

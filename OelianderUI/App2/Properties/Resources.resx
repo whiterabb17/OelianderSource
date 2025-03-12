@@ -124,7 +124,7 @@
     <value>Settings</value>
   </data>
   <data name="SettingsPageAboutText" xml:space="preserve">
-    <value>Settings page placeholder text.  Your app description goes here.</value>
+    <value>This application is aimed at discovering, analyzing &amp; displaying the impact of vulnerabilities within MikroTik RouterOS.</value>
   </data>
   <data name="SettingsPageAboutTitle" xml:space="preserve">
     <value>About this application</value>
@@ -167,5 +167,8 @@
   </data>
   <data name="AppDisplayName" xml:space="preserve">
     <value>Oeliander</value>
+  </data>
+  <data name="SettingsPageAboutText2" xml:space="preserve">
+    <value>Mainly the WinBox credential disclosure vulnerability.</value>
   </data>
 </root>

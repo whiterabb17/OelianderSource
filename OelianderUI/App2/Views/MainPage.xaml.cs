@@ -9,29 +9,30 @@ using OelianderUI.Core.Contracts.Services;
 using OelianderUI.Core.Models;
 using OelianderUI.Helpers;
 using Microsoft.Win32;
-using Windows.System;
+using System.Windows.Markup;
+using System.Diagnostics;
+using System.Windows;
+using ControlzEx.Standard;
 
 namespace OelianderUI.Views;
 
 public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
 {
+    #region locals
+
+    public ScanHelper helperObject { get; set; }
     private readonly IScanResultService _scanResults;
     internal static bool ShodanScan = false;
     internal static string _targetingString = "";
-    public ObservableCollection<ScanResult> Source { get; } = new ObservableCollection<ScanResult>();
-    #region locals
-
-    public ScanHelper helperObject
-    {
-        get; set;
-    }
-    public List<string> collectedCredentials = new List<string>();
-    public List<string> rosVersion = new List<string>();
-    public static Dictionary<Helpers.User, string> _staticList = new Dictionary<Helpers.User, string>();
+    public ObservableCollection<ScanResult> Source { get; } = new();
+    public List<string> collectedCredentials = new();
+    public List<string> rosVersion = new();
+    public static Dictionary<Helpers.User, string> _staticList = new();
     public bool SaveShodanOnly = false; 
     private static int _tabulation = 0; 
-    internal static Settings settings = new Settings();
-    public static List<CollectionListing> _collectionList = new List<CollectionListing>();
+    internal static Settings settings = new();
+    public static List<CollectionListing> _collectionList = new();
+    private readonly ReaderWriterLockSlim _readWriteLock = new();
 
     #endregion locals
 
@@ -53,8 +54,19 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
     {
         if (!File.Exists("Oeliander.log")) { File.Create("Oeliander.log"); }
         Thread.Sleep(1000);
-        try { Dispatcher.Invoke(() => System.IO.File.AppendAllText("Oeliander.log", text + Environment.NewLine)); }
-        catch (Exception ex) { LogBox.AppendText(ex.Message); }
+        _readWriteLock.EnterWriteLock();
+        try
+        {
+            var resultPath = Directory.GetCurrentDirectory() + "\\Oeilander.log";
+            using StreamWriter st = File.AppendText(resultPath);
+            st.WriteLine(text);
+        }
+        finally
+        {
+            _readWriteLock.ExitWriteLock();
+        }
+        //try { Dispatcher.Invoke(() => System.IO.File.AppendAllText("Oeliander.log", text + Environment.NewLine)); }
+        //catch (Exception ex) { LogBox.AppendText(ex.Message); }
     }
     public void AddLog(string text, object obj)
     {
@@ -70,9 +82,9 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
             helperObject.HandleException(E);
         }
     }
-    public MainPage(IScanResultService scanResultService)
+    public MainPage() //IScanResultService scanResultService)
     {
-        _scanResults = scanResultService;
+        //_scanResults = scanResultService;
         InitializeComponent();
         DataContext = this;
         rosVersion = new List<string>()
@@ -82,6 +94,7 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
             "6.32"
         };
         LoadOsVersions();
+        helperObject = new ScanHelper(AddLog, false, this) { debugMod = false };
     }
     public void ScanStop()
     {
@@ -92,8 +105,6 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
             AddToLogFile("\n\n\t[*] End of Scan: " + helperObject.GetTime() + "\n\n###############################################################################\n\n");
         });
     }
-    
-
     public void FillList()
     {
         Dispatcher.Invoke(() =>
@@ -102,6 +113,13 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
             userGrid.ItemsSource = _collectionList;
             userGrid.Items.Refresh();
         });
+        //foreach (var item in _connections)
+        //    Dispatcher.Invoke(() => { userGrid.Items.Add(item); });
+    }
+    public void FillList(List<CollectionListing> _connections)
+    {
+        foreach (var item in _connections)
+           Dispatcher.Invoke(() => { userGrid.Items.Add(item); });
     }
     public void AddCred(Helpers.User _uList, string _ip, bool status = false)
     {
@@ -110,16 +128,18 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
             _tabulation++;
             _collectionList.Add(new CollectionListing()
             {
-                Num = _tabulation,
+                Index = _tabulation,
                 Username = _uList.Username,
                 Password = _uList.Password,
                 IPAddress = _ip,
                 Status = status ? "Authenticated" : "Unauthenticated"
             });
             Console.Write(_collectionList.ToList());
-            List<CollectionListing> _finalList = _collectionList.Distinct().ToList();
+            var _finalList = _collectionList.Distinct().ToList();
             Console.Write(_finalList);
             Console.WriteLine();
+            FillList();
+//            FillList(_finalList);
         }
         catch (Exception E)
         {
@@ -135,7 +155,7 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
                 _tabulation++;
                 _collectionList.Add(new CollectionListing()
                 {
-                    Num = _tabulation,
+                    Index = _tabulation,
                     Username = _collected.Username,
                     Password = _collected.Password,
                     IPAddress = _ip,
@@ -146,12 +166,14 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
             List<CollectionListing> _finalList = _collectionList.Distinct().ToList();
             Console.Write(_finalList);
             Console.WriteLine();
-            Dispatcher.Invoke(() =>
-            {
-                userGrid.ItemsSource = null;
-                userGrid.ItemsSource = _collectionList;
-                userGrid.Items.Refresh();
-            });
+            FillList();
+            //FillList(_finalList);
+            //Dispatcher.Invoke(() =>
+            //{
+            //    userGrid.ItemsSource = null;
+            //    userGrid.ItemsSource = _collectionList;
+            //    userGrid.Items.Refresh();
+            //});
         }
         catch (Exception E)
         {
@@ -173,15 +195,20 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
 
     public async void OnNavigatedTo(object parameter)
     {
-        Source.Clear();
-
-        // Replace this with your actual data
-        var data = await _scanResults.GetGridDataAsync();
-
-        foreach (var item in data)
-        {
-            Source.Add(item);
+#if DEBUG
+        if (_collectionList.Count == 0)
+        {        
+            _collectionList.Add(new CollectionListing()
+            {
+                Index = 1,
+                Username = "admin",
+                Password = "password",
+                IPAddress = "127.0.0.1",
+                Status = "Unauthenticated"
+            });
         }
+#endif
+        FillList();
     }
 
     public void OnNavigatedFrom()
@@ -247,6 +274,18 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
         TargetTextBox.Text = op.FileName;
         _targetingString = Path.GetFileName(op.FileName);
     }
+    private void GetLogs(object sender, RoutedEventArgs e)
+    {
+        Process.Start("explorer", "Oeliander.log");
+    }
+    private void CheckResults(object sender, RoutedEventArgs e)
+    {
+        Process.Start("explorer", ".\\Results");
+    }
+    private void ClearLogs(object sender, RoutedEventArgs e)
+    {
+        File.WriteAllText("Oeliander.log", "Oeliander Exploit Logs\n--------------------------------\n\n");
+    }
 
     private void StartScan(object sender, System.Windows.RoutedEventArgs e)
     {
@@ -269,6 +308,5 @@ public partial class MainPage : Page, INotifyPropertyChanged, INavigationAware
         {
             helperObject.Stop();
         }
-
     }
 }

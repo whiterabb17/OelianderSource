@@ -106,4 +106,10 @@ public partial class SettingsPage : Page, INotifyPropertyChanged, INavigationAwa
         _Settings.settings.Connection_Timeout = timeoutValue.Text;
         _Settings.settings.SaveSettings();
     }
+
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+        var dialog = new ShellDialogWindow("Dialog Heading", "Dialog Text", true);
+        dialog.ShowDialog();
+    }
 }

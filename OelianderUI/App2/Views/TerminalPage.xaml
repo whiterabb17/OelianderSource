@@ -21,10 +21,72 @@
             Grid.Row="1"
             Margin="{StaticResource MediumLeftRightMargin}"
             Background="{DynamicResource MahApps.Brushes.Gray10}">
-            <!--
-            The Mahapps Gray10 color represents where you should place your content.
-            Place your content here.
-            -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="229*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="136*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="15*"/>
+                <RowDefinition Height="42*"/>
+                <RowDefinition Height="11*"/>
+                <RowDefinition Height="289*"/>
+                <RowDefinition Height="31*"/>
+                <RowDefinition Height="14*"/>
+            </Grid.RowDefinitions>
+            <Button
+                Grid.Column="3"
+                Grid.Row="1"
+                Content="Connect" 
+                x:Name="ConnectButton"
+                Margin="136,0,18,0" Click="Button_Click" />
+            <TextBox
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                x:Name="connectionString"
+                TextAlignment="Center"
+                Text="admin@127.0.0.1:admin123" 
+                Margin="159,0,158,0" 
+                FontSize="18" />
+            <RichTextBox
+                Grid.Row="3"
+                Grid.Column="1"
+                x:Name="LogBox"
+                IsReadOnly="True" 
+                BorderThickness="2,2,2,2" 
+                Background="#FF5D5B5B" 
+                Foreground="#FF014D16" TextChanged="logRichTextBox_TextChanged">
+            </RichTextBox>
+            <TextBox
+                Grid.Row="4"
+                Grid.Column="1"
+                x:Name="commandText"
+                Text="{Binding CommandText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                Grid.RowSpan="1" 
+                Grid.ColumnSpan="1" KeyDown="commandText_KeyDown"/>
+            <DataGrid
+                x:Name="userGrid"
+                Grid.Row="3"
+                Grid.Column="3"
+                Grid.RowSpan="2" SelectedCellsChanged="userGrid_SelectedCellsChanged_1"
+                ItemsSource="{Binding CollectedTargets}" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Binding="{Binding Index}" Header="#" />
+                    <DataGridTextColumn Binding="{Binding IPAddress}" Header="IPAddress" />
+                    <DataGridTextColumn Binding="{Binding Username}" Header="Username" />
+                    <DataGridTextColumn Binding="{Binding Password}" Header="Password" />
+                    <DataGridTextColumn Binding="{Binding Status}" Header="Status" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Text="Server Address:" 
+                FontSize="18" 
+                Margin="7,6,299,9" />
         </Grid>
     </Grid>
 </Page>

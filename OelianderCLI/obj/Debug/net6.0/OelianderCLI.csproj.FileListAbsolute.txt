@@ -1,7 +1,0 @@
-D:\Repos\OelianderSource\OelianderCLI\bin\Debug\net6.0\OelianderCLI.deps.json
-D:\Repos\OelianderSource\OelianderCLI\bin\Debug\net6.0\OelianderCLI.runtimeconfig.json
-D:\Repos\OelianderSource\OelianderCLI\obj\Debug\net6.0\OelianderCLI.GeneratedMSBuildEditorConfig.editorconfig
-D:\Repos\OelianderSource\OelianderCLI\obj\Debug\net6.0\OelianderCLI.AssemblyInfoInputs.cache
-D:\Repos\OelianderSource\OelianderCLI\obj\Debug\net6.0\OelianderCLI.AssemblyInfo.cs
-D:\Repos\OelianderSource\OelianderCLI\obj\Debug\net6.0\Oeliande.0CA39B5B.Up2Date
-D:\Repos\OelianderSource\OelianderCLI\obj\Debug\net6.0\OelianderCLI.genruntimeconfig.cache

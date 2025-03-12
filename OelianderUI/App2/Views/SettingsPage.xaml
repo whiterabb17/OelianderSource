@@ -31,7 +31,7 @@
             <TextBlock
                 Style="{StaticResource PageTitleStyle}"
                 Text="{x:Static properties:Resources.SettingsPageTitle}" Grid.ColumnSpan="3" Margin="24,0,0,0" Height="30" Grid.Column="1" />
-            <Button Grid.Column="3" Grid.Row="2" Command="" Content="Save Key" Margin="0,3,0,0" Click="Button_Click" />
+            <Button Grid.Column="3" Grid.Row="2" Command="" Content="Save Config" Margin="0,3,0,0" Click="Button_Click" />
             <TextBlock Grid.Row="1" Grid.Column="2" Style="{StaticResource SubtitleTextStyle}" Text="Connection Timeout" Grid.ColumnSpan="3" Margin="0,0,-23,33" Grid.RowSpan="2" />
             <TextBox Grid.Column="2" Grid.Row="2" x:Name="timeoutValue" Text="" Margin="0,3,24,0"/>
             <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource SubtitleTextStyle}" Text="Shodan API Key" Grid.ColumnSpan="4" Margin="0,0,-23,33" Grid.RowSpan="2" />
@@ -49,28 +49,37 @@
                     <TextBlock
                         Style="{StaticResource BodyTextStyle}"
                         Text="{x:Static properties:Resources.SettingsPageChooseThemeText}" />
-                    <StackPanel Margin="{StaticResource XSmallTopMargin}">
-                        <RadioButton
-                            GroupName="AppTheme"
-                            Content="{x:Static properties:Resources.SettingsPageRadioButtonLightTheme}"
-                            FontSize="{StaticResource MediumFontSize}"
-                            Checked="OnLightChecked"
-                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Light}" />
+                    <Grid Height="40">
                         <RadioButton
                             GroupName="AppTheme"
                             Content="{x:Static properties:Resources.SettingsPageRadioButtonDarkTheme}"
-                            Margin="{StaticResource XSmallTopMargin}"
+                            Margin="147,8,412,0"
                             FontSize="{StaticResource MediumFontSize}"
                             Checked="OnDarkChecked"
                             IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Dark}" />
                         <RadioButton
                             GroupName="AppTheme"
                             Content="{x:Static properties:Resources.SettingsPageRadioButtonWindowsDefaultTheme}"
-                            Margin="{StaticResource XSmallTopMargin}"
+                            Margin="0,8,569,0"
                             FontSize="{StaticResource MediumFontSize}"
                             Checked="OnDefaultChecked"
-                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default}" />
-                    </StackPanel>
+                            IsChecked="{Binding Theme, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default}" RenderTransformOrigin="0.5,0.5" >
+                            <RadioButton.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform Angle="-0.058"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </RadioButton.RenderTransform>
+                        </RadioButton>
+                        <RadioButton
+                            GroupName="AppTheme"
+                            Content="{x:Static properties:Resources.SettingsPageRadioButtonLightTheme}"
+                            FontSize="{StaticResource MediumFontSize}"
+                            Checked="OnLightChecked"
+                            IsChecked="{Binding Theme, ConverterParameter=Light, Converter={StaticResource EnumToBooleanConverter}}" Margin="300,8,253,0" />
+                    </Grid>
                 </StackPanel>
 
                 <TextBlock
@@ -85,7 +94,10 @@
                     Margin="{StaticResource XSmallTopMargin}"
                     Style="{StaticResource BodyTextStyle}"
                     Text="{x:Static properties:Resources.SettingsPageAboutText}" />
-
+                <TextBlock
+                    Margin="{StaticResource XSmallTopMargin}"
+                    Style="{StaticResource BodyTextStyle}"
+                    Text="{x:Static properties:Resources.SettingsPageAboutText2}" />
                 <TextBlock
                     Margin="{StaticResource SmallTopMargin}"
                     AutomationProperties.Name="{Binding Text, ElementName=settingsPrivacyStatement}">
@@ -99,6 +111,7 @@
                     </Hyperlink>
                 </TextBlock>
             </StackPanel>
+            <Button Grid.Column="2" Grid.Row="3" Command="" Content="Test Dialog" Margin="152,25,94,1436" Click="Button_Click_1" Grid.ColumnSpan="2" />
         </Grid>
     </ScrollViewer>
 </Page>

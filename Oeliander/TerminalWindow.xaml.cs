@@ -7,6 +7,11 @@ namespace Oeliander
 {
     public partial class TerminalWindow : Window
     {
+        public TerminalWindow(List<CollectionListing> connectionList)
+        {
+            InitializeComponent();
+            FillConnectionList(connectionList);
+        }
         #region locals
 
         public NewHelper helperObject { get; set; }
@@ -56,11 +61,7 @@ namespace Oeliander
             }
         }
 
-        public TerminalWindow(List<CollectionListing> connectionList)
-        {
-            InitializeComponent();
-            FillConnectionList(connectionList);
-        }
+        
         private void FillConnectionList(List<CollectionListing> _collectionList)
         {
             Dispatcher.Invoke(() =>
@@ -70,16 +71,7 @@ namespace Oeliander
                 userGrid.Items.Refresh();
             });
         }
-        private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
-        {
-            try
-            {
-                DragMove();
-            }
-            catch
-            {
-            }
-        }
+        
         private static SSH ssh;
         public void StartSSHConnection(string ip, User user)
         {
@@ -101,12 +93,6 @@ namespace Oeliander
             var ip = a.Split(':')[0];
             StartSSHConnection(ip, User);
         }
-
-        private void Label_MouseDoubleClick_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
         private void logRichTextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             try
@@ -118,12 +104,6 @@ namespace Oeliander
                 helperObject.HandleException(E);
             }
         }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
         private void commandText_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == System.Windows.Input.Key.Enter)
@@ -146,6 +126,24 @@ namespace Oeliander
             {
                 Dispatcher.Invoke(() => { connectionString.Text = $"{selectedItem.Username}@{selectedItem.IPAddress}:{selectedItem.Password}"; });
             }
+        }
+        private void Label_MouseDoubleClick_1(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+        private void Window_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            try
+            {
+                DragMove();
+            }
+            catch
+            {
+            }
+        }
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

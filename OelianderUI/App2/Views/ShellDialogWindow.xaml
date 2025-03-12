@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
     mc:Ignorable="d"
-    Style="{StaticResource CustomMetroWindow}">
+    Style="{StaticResource CustomMetroWindow}" Height="297" Width="459">
     <controls:MetroWindow.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -17,6 +17,21 @@
                 x:Name="dialogFrame"
                 Focusable="False"
                 NavigationUIVisibility="Hidden" />
+            <controls:FontIcon
+                x:Name="DialogIcon"
+                FontSize="48"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top" Margin="10,43,0,0" Width="59" />       
+            <TextBlock
+                x:Name="DialogHeading"
+                Text="{Binding DialogHeadingString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="0,44,0,131"
+                TextAlignment="Center"
+                FontSize="24px" />
+            <TextBlock
+                x:Name="DialogText"
+                Text="{Binding DialogTextString, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                FontSize="18px"
+                TextAlignment="Center" Margin="0,116,0,32"/>
             <Button
                 Grid.Row="1"
                 Content="Close"

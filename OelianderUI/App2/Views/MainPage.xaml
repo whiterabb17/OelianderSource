@@ -20,8 +20,13 @@
         <TextBlock
             Style="{StaticResource PageTitleStyle}"
             Margin="24,0,0,0"
-            Text="{x:Static properties:Resources.MainPageTitle}" Grid.ColumnSpan="2" Height="30" HorizontalAlignment="Center" />
-        <Grid Grid.Row="1" Grid.ColumnSpan="2">
+            Text="{x:Static properties:Resources.MainPageTitle}" 
+            Grid.ColumnSpan="2" 
+            Height="30" 
+            HorizontalAlignment="Center" />
+        <Grid 
+            Grid.Row="1" 
+            Grid.ColumnSpan="2">
             <Grid.RowDefinitions>
                 <RowDefinition Height="115*"/>
                 <RowDefinition Height="287*"/>
@@ -31,25 +36,85 @@
                 <ColumnDefinition Width="203*"/>
             </Grid.ColumnDefinitions>
             <TextBlock
-    Text="Target(s):" Margin="9,2,275,0" FontSize="18" Height="34" VerticalAlignment="Top" />
+                Text="Target(s):" 
+                Margin="9,2,275,0" 
+                FontSize="18" 
+                Height="34" 
+                VerticalAlignment="Top" />
             <TextBox
-    x:Name="TargetTextBox" Height="30" VerticalAlignment="Top" Margin="10,36,12,0" />
-            <Button x:Name="fileSelect" Margin="0,36,281,0" Content="Select" Height="30" VerticalAlignment="Top" Click="fileSelect_Click" Grid.Column="1" />
+                x:Name="TargetTextBox" 
+                Height="30" 
+                VerticalAlignment="Top" 
+                Margin="10,36,12,0" />
+            <Button 
+                x:Name="fileSelect"
+                Margin="0,36,281,0" 
+                Content="Select" 
+                Height="30" 
+                VerticalAlignment="Top" 
+                Click="fileSelect_Click" 
+                Grid.Column="1" />
             <RadioButton
-    x:Name="ManualScanButton"
-    Content="Manual Scan" Margin="139,3,134,0" IsChecked="True" Height="30" VerticalAlignment="Top" Grid.Column="1" Checked="ManualScanButton_Checked" />
+                x:Name="ManualScanButton"
+                Content="Manual Scan" 
+                Margin="139,3,134,0" 
+                IsChecked="True" 
+                Height="30" 
+                VerticalAlignment="Top" 
+                Grid.Column="1" 
+                Checked="ManualScanButton_Checked" />
             <RadioButton
-    x:Name="ShodanScanButton"
-    Content="Shodan Scan" Margin="248,3,25,0" Height="30" VerticalAlignment="Top" Grid.Column="1" Checked="ShodanScanButton_Checked" />
-
+                x:Name="ShodanScanButton"
+                Content="Shodan Scan" 
+                Margin="248,3,25,0" 
+                Height="30" 
+                VerticalAlignment="Top" 
+                Grid.Column="1" 
+                Checked="ShodanScanButton_Checked" />
             <RichTextBox
                 Grid.Row="1"
                 x:Name="LogBox"
-                IsReadOnly="True" Margin="10,0,10,10" />
+                IsReadOnly="True" 
+                Margin="10,0,10,10"
+                Background="#FF5D5B5B" 
+                Foreground="#FF186F00">
+                <RichTextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem
+                            x:Name="fetchLogs"
+                            Click="GetLogs"
+                            Header="Check Logs" >
+                            <MenuItem.Icon>
+                                <Image Source="/Assets/fetchlogs.png" ></Image>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem 
+                            Click="ClearLogs" 
+                            Header="Clear Logs">
+                            <MenuItem.Icon>
+                                <Image Source="/Assets/clearlogs.png" ></Image>
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem
+                            x:Name="ResultButton"
+                            Click="CheckResults"
+                            Header="Check Results">
+                            <MenuItem.Icon>
+                                <Image Source="/Assets/folderopen.png" ></Image>
+                            </MenuItem.Icon>
+                        </MenuItem>/>
+                    </ContextMenu>
+                </RichTextBox.ContextMenu>
+            </RichTextBox>
             <TextBlock
                 x:Name="ROSTextBlock"
                 Visibility="Hidden"
-                Text="RouterOS:" Margin="141,34,140,0" FontSize="18" Height="34" VerticalAlignment="Top" Grid.Column="1" />
+                Text="RouterOS:" 
+                Margin="141,34,140,0" 
+                FontSize="18" 
+                Height="34" 
+                VerticalAlignment="Top" 
+                Grid.Column="1" />
             <ComboBox
                 x:Name="routerVersion"
                 Grid.Column="1"
@@ -67,20 +132,14 @@
                 ItemsSource="{Binding Source}"
                 KeyboardNavigation.TabNavigation="Once" Margin="0,0,6,10">
                 <DataGrid.Columns>
-                    <!--
-                        TODO:
-                        Remove this column definitions and define columns for your data.
-                        Consider adding header properties to Resources.resw
-                    -->
                     <DataGridTextColumn Binding="{Binding Index}" Header="#" />
                     <DataGridTextColumn Binding="{Binding IPAddress}" Header="IPAddress" />
                     <DataGridTextColumn Binding="{Binding Username}" Header="Username" />
                     <DataGridTextColumn Binding="{Binding Password}" Header="Password" />
                     <DataGridTextColumn Binding="{Binding Status}" Header="Status" />
-
                 </DataGrid.Columns>
             </DataGrid>
-            <Button x:Name="StartScanButton" Margin="241,67,30,0" Content="Start" Height="30" VerticalAlignment="Top" Click="fileSelect_Click" Grid.Column="1" />
+            <Button x:Name="StartScanButton" Margin="241,67,30,0" Content="Start" Height="30" VerticalAlignment="Top" Click="StartScan" Grid.Column="1" />
         </Grid>
     </Grid>
 </Page>

@@ -9,10 +9,18 @@ namespace OelianderUI.Views;
 
 public partial class ShellDialogWindow : MetroWindow, IShellDialogWindow
 {
-    public ShellDialogWindow()
+    public string DialogHeadingString { get; set; }
+    public string DialogTextString { get; set; }
+    private readonly string ExclamationGlyph = "\uE783";
+    private readonly string WarningGlyph = "\uEB56";
+
+    public ShellDialogWindow(string heading, string text, bool warning)
     {
         InitializeComponent();
         DataContext = this;
+        DialogHeadingString = heading;
+        DialogTextString = text;
+        DialogIcon.Glyph = warning ? WarningGlyph : ExclamationGlyph;
     }
 
     public Frame GetDialogFrame()
