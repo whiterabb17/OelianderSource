@@ -1,0 +1,102 @@
+==========
+References
+==========
+Oeliander
+System.Windows
+System.Collections
+System
+System.Collections.Generic
+System.Linq
+System.IO
+Newtonsoft.Json
+System.Reflection
+System.Net
+Renci.SshNet
+System.Threading
+System.Windows.Threading
+System.Windows.Controls.Primitives
+System.Windows.Data
+System.Windows.Input
+System.Windows.Controls
+System.Windows.Forms
+System.Diagnostics
+System.Net.Sockets
+System.Text
+System.Security.Cryptography
+System.Threading.Tasks
+Oeliander.Properties
+System.CodeDom.Compiler
+System.Runtime.CompilerServices
+System.Resources
+System.Globalization
+System.Diagnostics.CodeAnalysis
+System.ComponentModel
+System.Configuration
+System.Windows.Markup
+Oeliander.MainWindow
+System.Runtime.InteropServices
+System.Windows.Automation
+System.Windows.Documents
+System.Windows.Ink
+System.Windows.Media
+System.Windows.Media.Animation
+System.Windows.Media.Effects
+System.Windows.Media.Imaging
+System.Windows.Media.Media3D
+System.Windows.Media.TextFormatting
+System.Windows.Navigation
+System.Windows.Shapes
+System.Windows.Shell
+project.all
+
+===============
+DownloadedFiles
+===============
+project.all.json
+system.configuration.json
+
+==============
+ProjectResults
+==============
+----------------------
+Showing results for: D:\Repos\OelianderSource\Oeliander\Oeliander.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+----------------------
+Showing results for: D:\Repos\OelianderSource\Oeliander\Oeliander.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net6.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+
+===========
+BuildErrors
+===========
+
+
